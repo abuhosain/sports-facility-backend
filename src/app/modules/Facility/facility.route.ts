@@ -13,6 +13,10 @@ router.post("/",
     FacilityControllers.createFacility
 )
 
+router.get("/", 
+    FacilityControllers.getAllFacility
+)
+
 router.put("/:id", 
     auth(USER_ROLE.admin),
     validateRequest(FaciltyValidation.updateFacilityValidationSchema),
