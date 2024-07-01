@@ -19,11 +19,13 @@ const createdBookingIntoDB = async (user: JwtPayload, payload: IBooking) => {
       facility: payload.facility,
       // Assuming booking times are stored in startTime and endTime fields
       startTime: { $lt: payload.endTime },
-      endTime: { $gt: payload.startTime }
+      endTime: { $gt: payload.startTime },
     })
 
     if (existingBookings.length > 0) {
-      throw new Error('Sorry! The facility is unavailable during the requested time slot.')
+      throw new Error(
+        'Sorry! The facility is unavailable during the requested time slot.',
+      )
     }
 
     // User Id set
@@ -39,17 +41,33 @@ const createdBookingIntoDB = async (user: JwtPayload, payload: IBooking) => {
   return result
 }
 
-
 const getAllBookingsFromDB = async () => {
-    const result = await Booking.find({
-      isBooked: { $eq: IsBooked_Status.confirmed },
-    })
-      .populate('user')
-      .populate('facility');
-    return result;
-  };
+  const result = await Booking.find({
+    isBooked: { $eq: IsBooked_Status.confirmed },
+  })
+    .populate('user')
+    .populate('facility')
+  return result
+}
+
+// RETRIVE  BOOKINGS FOR SPECIFIC USER FROM DATABASE
+
+const getUserBookingsFromDB = async (user: JwtPayload) => {
+  const isUserExists = await User.findOne({ email: user?.email })
+  const result = await Booking.find({
+    user: isUserExists?._id,
+    isBooked: { $eq: IsBooked_Status.confirmed },
+  })
+    .populate('user')
+    .populate('facility')
+
+  return result
+}
+
+
 
 export const BookingServices = {
-    createdBookingIntoDB,
-    getAllBookingsFromDB
+  createdBookingIntoDB,
+  getAllBookingsFromDB,
+  getUserBookingsFromDB
 }
