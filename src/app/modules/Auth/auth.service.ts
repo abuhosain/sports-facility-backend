@@ -39,6 +39,12 @@ const loginUser = async (payload: ILoginUser) => {
     config.jwt_access_secret as string,
     config.jwt_access_expire_in as string,
   )
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.jwt_refrsh_expire_in as string,
+  )
+
   const {email} = user;
 
   const userData =  await User.findOne({email});
@@ -46,6 +52,7 @@ const loginUser = async (payload: ILoginUser) => {
 
   return {
     accessToken,
+    refreshToken,
     user : userData
   }
 }

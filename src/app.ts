@@ -2,6 +2,8 @@ import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser"
 import router from "./app/routes";
+import notFound from "./app/middleware/notFound";
+import globalErrorHandler from "./app/middleware/globalErrorHandlers";
 // import globalErrorHandler from "./app/middleware/globalErrorHandler";
 
 const app : Application = express();
@@ -22,6 +24,10 @@ const test = async (req: Request, res: Response) => {
   
 app.get('/', test);
 
-// app.use(globalErrorHandler)
+// global error handler
+app.use(globalErrorHandler)
+
+// not found route
+app.use(notFound)
 
 export default app;

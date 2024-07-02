@@ -48,7 +48,7 @@ const getUserBookings = catchAsync(async (req, res) => {
         statusCode: httpStatus.NOT_FOUND,
         success: false,
         message: 'No Data Found',
-        data: result,
+        data : result
       });
     }
   

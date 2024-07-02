@@ -7,37 +7,37 @@ import config from "../config"
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import { User } from "../modules/Auth/auth.model"
 
-const auth = (...requirdRoles: IUserRole[]) => {
+const auth = (...requiredRoles: IUserRole[]) => {
     return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-      const token = req.headers.authorization
-      if (!token) {
-        throw new AppError(httpStatus.UNAUTHORIZED, 'Your are not authorized')
-      }
-  
-      // checkin if the given token is valid
-      const decoded = jwt.verify(
-        token,
-        config.jwt_access_secret as string,
-      ) as JwtPayload;
-      
-      const { role, email, } = decoded;
-      const user = await User.isUserExistsByEmail(email)
+        const token = req.headers.authorization;
+        if (!token) {
+            return next(new AppError(httpStatus.UNAUTHORIZED, 'You have no access to this route'));
+        }
 
-      // console.log("login:",user)
-      if (!user) {
-        throw new AppError(httpStatus.NOT_FOUND, 'This is user is not found')
-      }
-  
-     
-  
-      if (requirdRoles && !requirdRoles.includes(role)) {
-        throw new AppError(httpStatus.UNAUTHORIZED, 'Your are not authorized')
-      }
-      
-      req.user = decoded as JwtPayload;
-      next()
-  
-    })
-  }
+        try {
+            // Verifying token
+            const decoded = jwt.verify(token, config.jwt_access_secret as string) as JwtPayload;
 
-  export default auth
+            // Check if user exists
+            const { email } = decoded;
+            const user = await User.isUserExistsByEmail(email);
+
+            if (!user) {
+                return next(new AppError(httpStatus.NOT_FOUND, 'User not found'));
+            }
+
+            // Check if user has required role
+            if (requiredRoles.length > 0 && !requiredRoles.includes(decoded.role as IUserRole)) {
+                return next(new AppError(httpStatus.UNAUTHORIZED, 'You have no access to this route'));
+            }
+
+            // Assign decoded user information to req.user
+            req.user = decoded;
+            next();
+        } catch (err) {
+            return next(new AppError(httpStatus.UNAUTHORIZED, 'You have no access to this route'));
+        }
+    });
+};
+
+export default auth;
