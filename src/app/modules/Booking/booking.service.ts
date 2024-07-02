@@ -65,9 +65,19 @@ const getUserBookingsFromDB = async (user: JwtPayload) => {
 }
 
 
+//  cencell bookings from db
+const cancellBookingFromDb = async (id: string) => {
+  const result = await Booking.findByIdAndUpdate(
+    id,
+    { isBooked: IsBooked_Status.canceled },
+    { new: true },
+  ).populate('facility');
 
+  return result;
+};
 export const BookingServices = {
   createdBookingIntoDB,
   getAllBookingsFromDB,
-  getUserBookingsFromDB
+  getUserBookingsFromDB,
+  cancellBookingFromDb
 }
