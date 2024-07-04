@@ -18,7 +18,7 @@ app.use('/api', router)
 
 const test = async (req: Request, res: Response) => {
     // Promise.reject()
-    const a = "10"
+    const a = "It's me abu hosain and server is running"
     res.send(a)
   }
   

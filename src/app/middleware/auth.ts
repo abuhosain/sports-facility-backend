@@ -9,7 +9,8 @@ import { User } from "../modules/Auth/auth.model"
 
 const auth = (...requiredRoles: IUserRole[]) => {
     return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-        const token = req.headers.authorization;
+        const token = req.headers['authorization']?.split(' ')[1];
+        console.log(token)
         if (!token) {
             return next(new AppError(httpStatus.UNAUTHORIZED, 'You have no access to this route'));
         }
