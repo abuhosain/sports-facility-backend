@@ -30,7 +30,7 @@ const deleteFacilitiesFromDb = async (id: string) => {
 }
 
 const getAllFacilitiesFromDb = async() => {
-  const result = await Facility.find({});
+  const result = await Facility.find({isDeleted : false});
   return result;
 }
 

@@ -20,9 +20,18 @@ const createUserValidationSchema = z.object({
     }),
     address: z.string().min(1, { message: 'Address is required' })
   }),
-})
+});
+
+const refreshTokenValidationSchema = z.object({
+  cookies: z.object({
+    refreshToken: z.string({
+      required_error: 'Refresh token is required!',
+    }),
+  }),
+});
 
 export const AuthVallidation = {
   loginValidationSchema,
   createUserValidationSchema,
+  refreshTokenValidationSchema
 }

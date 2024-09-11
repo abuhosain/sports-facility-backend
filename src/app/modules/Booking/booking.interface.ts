@@ -1,5 +1,5 @@
 import { Types } from 'mongoose'
-import { IsBooked_Status } from './booking.constance'
+import { IsBooked_Status, P_Status } from './booking.constance'
 
 export interface IBooking {
   date: string
@@ -8,5 +8,7 @@ export interface IBooking {
   user?: Types.ObjectId
   payableAmount?: number
   facility?: Types.ObjectId
-  isBooked?: keyof typeof IsBooked_Status
+  isBooked?: keyof typeof IsBooked_Status;
+  transactionId?: string;
+  paymentStatus?: keyof typeof P_Status;
 }

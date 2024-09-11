@@ -19,6 +19,10 @@ const facilitySchema = new Schema<IFacility>(
       type: String,
       required: true,
     },
+    image: {
+      type: String,
+      required: true,
+    },
     isDeleted: {
       type: Boolean,
       required: true,

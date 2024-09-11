@@ -27,12 +27,27 @@ const createdBookingIntoDB = async (user: JwtPayload, payload: IBooking) => {
         'Sorry! The facility is unavailable during the requested time slot.',
       )
     }
+    if (isUserExists) {
+      // User Id set
+      booking.user = isUserExists._id
+    } else {
+      throw new Error('Sorry! User  is missing!');
+    }
 
-    // User Id set
-    booking.user = isUserExists._id
     // PAYABLE AMOUNT HANDLER
-    const pricePerHour = Number(isFindFacility?.pricePerHour)
-    booking.payableAmount = calculateAmount(pricePerHour, payload)
+    const pricePerHour = Number(isFindFacility?.pricePerHour);
+    const payableAmount = calculateAmount(pricePerHour, payload);
+    if(payableAmount){
+      booking.payableAmount = payableAmount;
+    }else{
+      throw new Error('calculate Payable Amount Failed');
+    }
+
+
+    // transiction
+    const transactionId = `TXN-${Date.now()}`;
+    booking.transactionId = transactionId;
+
   } else {
     throw new Error('Sorry! User or facility not found!')
   }
@@ -64,20 +79,26 @@ const getUserBookingsFromDB = async (user: JwtPayload) => {
   return result
 }
 
-
 //  cencell bookings from db
 const cancellBookingFromDb = async (id: string) => {
   const result = await Booking.findByIdAndUpdate(
     id,
     { isBooked: IsBooked_Status.canceled },
     { new: true },
-  ).populate('facility');
+  ).populate('facility')
 
-  return result;
-};
+  return result
+}
+
+const getSingleUserBookingsFromDB = async (id: string) => {
+  const result = await Booking.findById(id).populate('facility')
+  return result
+}
+
 export const BookingServices = {
   createdBookingIntoDB,
   getAllBookingsFromDB,
   getUserBookingsFromDB,
-  cancellBookingFromDb
+  cancellBookingFromDb,
+  getSingleUserBookingsFromDB,
 }

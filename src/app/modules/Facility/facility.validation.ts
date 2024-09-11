@@ -6,6 +6,7 @@ const createFacilityValidationSchema = z.object({
     description: z.string().min(1, 'Description is required'),
     pricePerHour: z.number().min(0, 'Price per hour must be a positive number'),
     location: z.string().min(1, 'Location is required'),
+    image: z.string().min(1, 'Image is required'),
   }),
 })
 
