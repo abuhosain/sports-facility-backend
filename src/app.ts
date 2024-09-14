@@ -1,32 +1,43 @@
+/* eslint-disable no-undef */
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser"
 import router from "./app/routes";
 import notFound from "./app/middleware/notFound";
 import globalErrorHandler from "./app/middleware/globalErrorHandlers";
-// import globalErrorHandler from "./app/middleware/globalErrorHandler";
-
+import path from "path";
+ 
 const app : Application = express();
 
 // parser
 app.use(express.json());
+
+app.use(cookieParser());
+
 app.use(cors({
   origin : "http://localhost:5173",
   credentials : true,
   
 }));
-app.use(cookieParser());
+
+
+// Serve static files from the 'build' directory
+app.use(express.static(path.join(__dirname, '..', 'build')));
+
 
 // application routes
 app.use('/api', router)
 
-const test = async (req: Request, res: Response) => {
-    // Promise.reject()
-    const a = "It's me abu hosain and server is running"
-    res.send(a)
-  }
-  
-app.get('/', test);
+// Test route
+app.get('/', async (req: Request, res: Response) => {
+  const message = 'victory zone server is running';
+  res.send(message);
+});
+
+// Catch-all route for client-side routing
+app.get('*', (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
+});
 
 // global error handler
 app.use(globalErrorHandler)
