@@ -11,6 +11,12 @@ const signUpUserIntoDb = async (payload: IUser) => {
   return result
 }
 
+const signUpAdminIntoDb = async(payload : IUser) => {
+  payload.role = "admin";
+  const result = await User.create(payload);
+  return result;
+}
+
 const loginUser = async (payload: ILoginUser) => {
   const user = await User.isUserExistsByEmail(payload.email)
 
@@ -81,7 +87,7 @@ const getRefreshToken = async (token: string) => {
     config.jwt_access_secret as string,
     config.jwt_access_expire_in as string
   );
-  console.log(accessToken)
+  // console.log(accessToken)
   return {
     accessToken,
   };
@@ -92,5 +98,6 @@ const getRefreshToken = async (token: string) => {
 export const AuthServices = {
   signUpUserIntoDb,
   loginUser,
-  getRefreshToken
+  getRefreshToken,
+  signUpAdminIntoDb
 }

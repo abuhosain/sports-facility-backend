@@ -15,6 +15,17 @@ const signupUser = catchAsync(async (req, res) => {
   })
 })
 
+const signupAdmin = catchAsync(async (req, res) => {
+  const user = req.body
+  const result = await AuthServices.signUpAdminIntoDb(user)
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Admin is registered successfully',
+    data: result,
+  })
+})
+
 const loginUser = catchAsync(async (req, res) => { 
     const result = await AuthServices.loginUser(req.body);
     const {accessToken, user} = result;
@@ -47,5 +58,6 @@ const refreshToken = catchAsync(async (req, res) => {
 export const AuthControllers = {
   signupUser,
   loginUser,
-  refreshToken
+  refreshToken,
+  signupAdmin
 }

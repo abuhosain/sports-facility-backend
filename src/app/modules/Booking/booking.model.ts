@@ -39,7 +39,8 @@ const bookingSchema = new Schema<IBooking>(
     paymentStatus : {
       type : String,
       required : true,
-      enum : Object.keys(P_Status)
+      enum : Object.keys(P_Status),
+      default :  P_Status.pending
     },
    transactionId : {
     type : String
