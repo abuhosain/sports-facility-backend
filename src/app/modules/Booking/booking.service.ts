@@ -17,7 +17,7 @@ const createdBookingIntoDB = async (user: JwtPayload, payload: IBooking) => {
   if (isUserExists && isFindFacility) {
     // Check for facility availability
 
-    const existingBookings = await Booking.find({
+     await Booking.find({
       facility: payload.facility,
       // Assuming booking times are stored in startTime and endTime fields
       startTime: { $lt: payload.endTime },
@@ -53,7 +53,7 @@ const createdBookingIntoDB = async (user: JwtPayload, payload: IBooking) => {
     throw new Error('Sorry! User or facility not found!')
   }
 
-  const bookingCreate = await Booking.create(booking)
+    await Booking.create(booking)
   const paymentData = {
     transactionId: booking.transactionId,
     totalPrice: booking.payableAmount,

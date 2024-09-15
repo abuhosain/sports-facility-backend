@@ -11,7 +11,7 @@ const confirmationService = async (transactionId: string, status: string) => {
   let paymentData
 
   if (verifyResponse && verifyResponse.pay_status === 'Successful') {
-    const updatedPaymentStatus = await Booking.findOneAndUpdate(
+     await Booking.findOneAndUpdate(
       { transactionId },
       {
         paymentStatus: P_Status.paid,
@@ -30,14 +30,18 @@ const confirmationService = async (transactionId: string, status: string) => {
     }
   }
   if (paymentData && status === 'success') {
-    const filePathSuccess = join(
-      __dirname,
-      '../../../views/confrimation.ejs',
-    )
-    const template = await ejs.renderFile(filePathSuccess, paymentData)
+    // const filePathSuccess = join(
+    //   __dirname,
+    //   '../../../views/confrimation.ejs',
+    // )
+    const filePathSuccess = join(process.cwd(), 'views', 'confrimation.ejs');
+    const template = await ejs.renderFile(filePathSuccess, paymentData);
+  
     return template
   } else {
-    const filePathFaild = join(__dirname, '../../../views/failded.ejs')
+    // const filePathFaild = join(__dirname, '../../../views/failded.ejs')
+    const filePathFaild = join(process.cwd(), 'views', 'failded.ejs');
+   
     const template = await ejs.renderFile(filePathFaild, {})
     return template
   }

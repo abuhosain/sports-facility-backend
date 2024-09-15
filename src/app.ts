@@ -15,15 +15,16 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-  origin : "http://localhost:5173",
+  origin : ["http://localhost:5173", "https://sports-facility-frontend-ten.vercel.app"],
   credentials : true,
   
 }));
 
 
 // Serve static files from the 'build' directory
-app.use(express.static(path.join(__dirname, '..', 'build')));
+// app.use(express.static(path.join(__dirname, '..', 'build')));
 
+app.set("view engine", "ejs");
 
 // application routes
 app.use('/api', router)
@@ -33,6 +34,8 @@ app.get('/', async (req: Request, res: Response) => {
   const message = 'victory zone server is running';
   res.send(message);
 });
+
+
 
 // Catch-all route for client-side routing
 app.get('*', (req: Request, res: Response) => {
